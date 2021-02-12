@@ -111,7 +111,7 @@ class SubjectManager
 
         // Get the buttons
         let btnsNext = document.querySelectorAll('.btn-next');
-        let btnPrev = document.getElementById('btn-prev');
+        let btnsPrev = document.querySelectorAll('.btn-prev');
 
         // Check which button/buttons should be shown
 
@@ -126,14 +126,43 @@ class SubjectManager
                 document.getElementById("subject-page").style = 'display: none;';
 
                 this.page = "end";
+
+                // Export the data
+                answers.Export();
             }
         }
         else btnsNext.forEach(btnNext => { btnNext.style ="visibility: visible;"; });
 
         // When we are at 0 or lower we won't show the prev button
-        if(this.subjectPointer <= 0) btnPrev.style = "visibility: hidden;"
-        else btnPrev.style = "visibility: visible;"
+        if(this.subjectPointer <= 0) btnsPrev.forEach(btnPrev => { btnPrev.style="visibility: hidden;"; });
+        else btnsPrev.forEach(btnPrev => { btnPrev.style="visibility: visible;"; });
     }
 }
 
-class 
+class AnswerArray
+{
+    constructor()
+    {
+    }
+    /**
+     * Array of key value pairs 
+     * @type {Array.<{subjectID: number, answer: string}>}
+     */
+    inner = [];
+
+    /**
+     * Adds an answer to the answer array
+     * @param {"pro" | "contra" | "none"} answer 
+     */
+    AddAnswer(answer)
+    {
+        // Add a new item to the array
+        this.inner.push({"subjectID": SubjectManager.subjectPointer, "answer": answer});
+    }
+    
+    Export() 
+    {
+        //location.replace(window.URL.createObjectURL(new Blob([this.inner], {type: 'application/json'})));
+        document.getElementById('export').href = window.URL.createObjectURL(new Blob([JSON.stringify(this.inner)], {type: 'text/plain'}));
+    }
+}
