@@ -1,0 +1,27 @@
+<script>
+    // Get the numbers
+    let number1 = prompt("Type the first number");
+    let number2 = prompt("Type the second number");
+
+    // Check if the numbers are numeric (not in the function)
+    while(true)
+    {
+        if(isNaN(number1)) number1 = prompt("First number was not a number!\nTry again!");
+        if(isNaN(number2)) number2 = prompt("Second number was not a number!\nTry again!");
+
+        if(!isNaN(number1) && !isNaN(number2)) break; // Stop the loop
+    }
+
+    console.log(GetLargestNumber(Number(number1), Number(number2)));
+    
+    /**
+     * A function that gives the lagest between 2 numbers
+     * @param {Number} number1 
+     * @param {Number} number2 
+     * @returns {number} Largest Number 
+     */
+    function GetLargestNumber(number1, number2) 
+    {
+        return number1 >= number2 ? number1 : number2;
+    }
+</script>
