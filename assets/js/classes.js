@@ -31,7 +31,7 @@ class SubjectManager
     
     /**
      * The curent local Page
-     * @type {"start" | "subject" | "end"}
+     * @type {"start" | "subject" | "end" | "result"}
      */
     static page = "start";
 
@@ -81,10 +81,42 @@ class SubjectManager
         // Load the opinions of the parties
         subject['parties'].forEach(party => {
             console.log(party);
-        }); 
+        });
 
         // True when the subject was successfully loaded
         return true;
+    }
+    /**
+     * @returns {string} Result
+     */
+    static GetResult()
+    {
+        // Count all the parties where the result matches
+        let partyCount = [];
+        parties.forEach(party =>
+        {
+            partyCount.push({'party': party['name'], 'matches': 0});
+        });
+
+        // For all answes we add to 
+        answers.inner.forEach(answer => {
+            // Check the parties that match with this answer
+            answer['matches'].forEach(match => 
+            {
+                console.log(match);
+                // Check in all parties if there is a match
+                partyCount.forEach(party => {
+                    if(party['party'] == match['name']) party['matches']++;
+                });
+            });
+        });
+
+        // Now we check who got the most matches and we return this result
+        let bestMatch = {'party': 'empty', 'matches': -1};
+        partyCount.forEach(party => {
+            if(party['matches'] > bestMatch['matches']) bestMatch = party;
+        });
+        return bestMatch;
     }
 
     /**
@@ -92,15 +124,19 @@ class SubjectManager
      */
     static UpdateButtons()
     {
-        // When we are of the end page and we want to go back we load the subject page
-        if(this.page == "end") 
-        {                
-            document.getElementById("end-page").style = 'display: none;';
-            document.getElementById("subject-page").style = 'display: block;';
+        // When we are on the result page we can't go back
+        if(this.page == 'result') return;
 
-            this.page = "subject";
+        // When we are of the end page and we want to go back we load the subject page
+        if(this.page == 'end') 
+        {                
+            document.getElementById('end-page').style = 'display: none;';
+            document.getElementById('subject-page').style = 'display: block;';
+
+            this.page = 'subject';
         }
-        else if(this.page == "start")
+        // When we are on the start page and we click on start we should load the subject page
+        else if(this.page == 'start')
         {
             document.getElementById("start-page").style = 'display: none;';
             document.getElementById("end-page").style = 'display: none;';
@@ -141,26 +177,33 @@ class SubjectManager
 
 class AnswerArray
 {
-    constructor()
-    {
-    }
     /**
      * Array of key value pairs 
-     * @type {Array.<{subjectID: number, answer: string}>}
+     * @type {Array.<{subjectID: number, answer: string, matches: Array}>}
      */
     inner = [];
 
     /**
-     * Adds an answer to the answer array
+     * Adds/Sets an answer to the answer array
      * @param {"pro" | "contra" | "none"} answer 
      */
-    AddAnswer(answer)
+    SetAnswer(answer)
     {
-        // Add a new item to the array
-        this.inner.push({"subjectID": SubjectManager.subjectPointer, "answer": answer});
+        // Pointer to the curent element
+        let curentPointer = SubjectManager.subjectPointer - 1;
+
+        // Get all parties connected to the answer
+        let partiesFound = [];
+        subjects[curentPointer]['parties'].forEach(subject => 
+        {
+            if(subject['position'] == answer) partiesFound.push(subject);
+        });
+
+        // Set the answer with the curent subject id
+        this.inner[curentPointer] = { subjectID: SubjectManager.subjectPointer, 'answer': answer, 'matches': partiesFound };
     }
     
-    Export() 
+    Export()
     {
         //location.replace(window.URL.createObjectURL(new Blob([this.inner], {type: 'application/json'})));
         document.getElementById('export').href = window.URL.createObjectURL(new Blob([JSON.stringify(this.inner)], {type: 'text/plain'}));

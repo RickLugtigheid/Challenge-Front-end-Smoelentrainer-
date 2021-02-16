@@ -24,7 +24,7 @@
     <div id="start-page" style="visibility: visible;">
         <button id="btn-start">Start</button>
     </div>
-    <div id="subject-page" style="visibility: hidden;">
+    <div id="subject-page" style="display: none;">
         <button class="btn-prev">Previous</button>
         <button class="btn-next">Next</button>
 
@@ -51,15 +51,20 @@
         </div>
     </div>
 
-    <div id="end-page" style="visibility: hidden;">
+    <div id="end-page" style="display: none;">
         <button class="btn-prev">Previous</button>
+        <button id="btn-result">Show Result</button>
+    </div>
+    
+    <div id="result-page"  style="display: none;">
         <a id="export" href="" download="export.json">Export</a>
+        <h1 id="result">Result not found</h1>
     </div>
 
     <!-- Scripts -->
     <script src="http://stemwijzer.dvc-icta.nl/data.js"></script>
-    
     <!-- <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script> -->
+
     <script src="./assets/js/classes.js"></script>
     <script src="./assets/js/app.js"></script>
 </body>
