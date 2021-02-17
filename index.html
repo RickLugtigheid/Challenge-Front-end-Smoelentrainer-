@@ -5,7 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="author" content="Rick Lugtigheid">
     <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
-    <title>Home</title>
+    <title>Tweede Kamerverkiezingen 2021</title>
+
+    <script src="https://kit.fontawesome.com/5eb0758b3a.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <!-- <link rel="stylesheet" href="https://tweedekamer2021.stemwijzer.nl/css/app.909e1954.css"> -->
 
     <!-- Bootstrap -->
         <!-- Just for bootstrap -->
@@ -21,44 +25,62 @@
 
 </head>
 <body>
-    <div id="start-page" style="visibility: visible;">
-        <button id="btn-start">Start</button>
-    </div>
-    <div id="subject-page" style="visibility: hidden;">
-        <button class="btn-prev">Previous</button>
-        <button class="btn-next">Next</button>
+    <div class="container text-center panel panel-default">
+        <div class="panel-body row">
+            <div id="start-page" style="visibility: visible;">
+                <button class="btn btn-primary" id="btn-start">Start</button>
+            </div>
+            <div id="subject-page" style="display: none;">
+                <button class="btn btn-prev">Ga Terug</button>
+                <button class="btn btn-next">Sla deze vraag over</button>
+        
 
-        <h1 id="title"></h1>
-        <b id="statement"></b>
+                <button type="button" href="#party-collapse" class="btn btn-light img-thumbnail dropdown-toggle" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-comment-alt"></i> Wat vinden de partijen?
+                </button>
+                <div class="collapse row" id="party-collapse">
+                    <div id="opinions-pro" class="float-col">
+                        <b><i class="fas fa-thumbs-up"></i> Eens</b>
+                    </div>
+                    <div id="opinions-none" class="float-col">
+                        <b>~ Geen van beide</b>
+                    </div>
+                    <div id="opinions-contra" class="float-col">
+                        <b><i class="fas fa-thumbs-down"></i> Oneens</b>
+                    </div>
+                </div>
 
-        <div class="btn-group" id="statement-opinions">
-            <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Wat vinden de partijen?
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Separated link</a>
-              </div>
+
+                <h1 id="title"></h1>
+                <b id="statement"></b>
+        
+                <div>
+                    <button id="btn-pro" class="btn btn-success btn-next"><i class="fas fa-thumbs-up"></i> Eens</button>
+                    <button id="btn-none" class="btn btn-next">~ Geen van beide</button>
+                    <button id="btn-contra" class="btn btn-danger btn-next"><i class="fas fa-thumbs-down"></i> oneens</button>
+                </div>
+            </div>
+        
+            <div id="end-page" style="display: none;">
+                <button class="btn btn-prev">Previous</button>
+                <button id="btn-result" class="btn">Show Result</button>
+
+                <div id="important-subjects" class="form-check">
+
+                </div>
+            </div>
+            
+            <div id="result-page"  style="display: none;">
+                <a id="export" href="" download="export.json">Export</a>
+                <h1 id="result">Result not found</h1>
+            </div>
         </div>
-
-        <div>
-            <button class="btn-next">Eens</button>
-            <button class="btn-next">Geen van beide</button>
-            <button class="btn-next">Eens</button>
-        </div>
-    </div>
-
-    <div id="end-page" style="visibility: hidden;">
-        <button class="btn-prev">Previous</button>
     </div>
 
     <!-- Scripts -->
-    <script src="http://stemwijzer.dvc-icta.nl/data.js"></script>
-    
-    <!-- <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script> -->
+    <!-- <script src="http://stemwijzer.dvc-icta.nl/data.js"></script> -->
+    <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script>
+
     <script src="./assets/js/classes.js"></script>
     <script src="./assets/js/app.js"></script>
 </body>

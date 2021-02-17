@@ -31,7 +31,7 @@ class SubjectManager
     
     /**
      * The curent local Page
-     * @type {"start" | "subject" | "end"}
+     * @type {"start" | "subject" | "end" | "result"}
      */
     static page = "start";
 
@@ -81,10 +81,76 @@ class SubjectManager
         // Load the opinions of the parties
         subject['parties'].forEach(party => {
             console.log(party);
-        }); 
+        });
 
         // True when the subject was successfully loaded
         return true;
+    }
+    /**
+     * @returns {string} Result
+     */
+    static GetResult()
+    {
+        // Count all the parties where the result matches
+        let partyCount = [];
+        parties.forEach(party =>
+        {
+            partyCount.push({'party': party['name'], 'matches': 0});
+        });
+
+        // Create an array with the extra points per match
+        let extraPoints = []
+        for(let i = 0; i < HEAVY_SUBJECTS.children.length; i++)
+        {
+            // The first child is the checkbox
+            // And the second the label
+            let child = HEAVY_SUBJECTS.children[i];
+
+            // Check if we want extra value
+            if(child.children[0].checked) 
+                // Add the subject we want extra points for to the array
+                extraPoints.push(child.children[1].innerHTML);
+        }
+
+        // For all answes we add to 
+        console.warn(extraPoints);
+        answers.inner.forEach(answer => {
+            // Check the parties that match with this answer
+            answer['matches'].forEach(match => 
+            {
+                console.log(match);
+                // Check in all parties if there is a match
+                partyCount.forEach(party => {
+                    if(party['party'] == match['name'])
+                    {
+                        party['matches']++;
+                        // Check if we should give extra points
+                        if(extraPoints.includes(subjects[answer['subjectID'] - 1]['title'])) party['matches']++;
+                    }
+                });
+            });
+        });
+
+        // Now we check who got the most matches and we return this result
+        let bestMatch = {'party': 'empty', 'matches': -1};
+        partyCount.forEach(party => {
+            if(party['matches'] > bestMatch['matches']) bestMatch = party;
+        });
+        return bestMatch;
+    }
+    /**
+     * @param {"start" | "subject" | "end" | "result"} page
+     */
+    static ShowPage(page)
+    {
+        // Set the curent page
+        this.page = page;
+
+        // Show/hide the corect pages
+        document.getElementById('start-page').style = this.page == 'start' ? 'display: block;' : 'display: none;';
+        document.getElementById('subject-page').style = this.page == 'subject' ? 'display: block;' : 'display: none;';
+        document.getElementById('end-page').style = this.page == 'end' ? 'display: block;' : 'display: none;';
+        document.getElementById('result-page').style = this.page == 'result' ? 'display: block;' : 'display: none;';
     }
 
     /**
@@ -92,26 +158,9 @@ class SubjectManager
      */
     static UpdateButtons()
     {
-        // When we are of the end page and we want to go back we load the subject page
-        if(this.page == "end") 
-        {                
-            document.getElementById("end-page").style = 'display: none;';
-            document.getElementById("subject-page").style = 'display: block;';
-
-            this.page = "subject";
-        }
-        else if(this.page == "start")
-        {
-            document.getElementById("start-page").style = 'display: none;';
-            document.getElementById("end-page").style = 'display: none;';
-            document.getElementById("subject-page").style = 'display: block;';
-
-            this.page = "subject";
-        }
-
         // Get the buttons
         let btnsNext = document.querySelectorAll('.btn-next');
-        let btnPrev = document.getElementById('btn-prev');
+        let btnsPrev = document.querySelectorAll('.btn-prev');
 
         // Check which button/buttons should be shown
 
@@ -121,19 +170,53 @@ class SubjectManager
 
             // Load the end page
             if(this.page == "subject") 
-            {                
-                document.getElementById("end-page").style = 'display: block;';
-                document.getElementById("subject-page").style = 'display: none;';
+            {
+                // Show the end page
+                this.ShowPage('end');
 
-                this.page = "end";
+                // Export the data
+                answers.Export();
             }
         }
         else btnsNext.forEach(btnNext => { btnNext.style ="visibility: visible;"; });
 
         // When we are at 0 or lower we won't show the prev button
-        if(this.subjectPointer <= 0) btnPrev.style = "visibility: hidden;"
-        else btnPrev.style = "visibility: visible;"
+        if(this.subjectPointer <= 0) btnsPrev.forEach(btnPrev => { btnPrev.style="visibility: hidden;"; });
+        else btnsPrev.forEach(btnPrev => { btnPrev.style="visibility: visible;"; });
     }
 }
 
-class 
+class AnswerArray
+{
+    /**
+     * Array of key value pairs 
+     * @type {Array.<{subjectID: number, answer: string, matches: Array}>}
+     */
+    inner = [];
+
+    /**
+     * Adds/Sets an answer to the answer array
+     * @param {"pro" | "contra" | "none"} answer 
+     */
+    SetAnswer(answer)
+    {
+        // Pointer to the curent element
+        let curentPointer = SubjectManager.subjectPointer - 1;
+
+        // Get all parties connected to the answer
+        let partiesFound = [];
+        subjects[curentPointer]['parties'].forEach(subject => 
+        {
+            if(subject['position'] == answer) partiesFound.push(subject);
+        });
+
+        // Set the answer with the curent subject id
+        this.inner[curentPointer] = { subjectID: SubjectManager.subjectPointer, 'answer': answer, 'matches': partiesFound };
+    }
+    
+    Export()
+    {
+        //location.replace(window.URL.createObjectURL(new Blob([this.inner], {type: 'application/json'})));
+        document.getElementById('export').href = window.URL.createObjectURL(new Blob([JSON.stringify(this.inner)], {type: 'text/plain'}));
+    }
+}
