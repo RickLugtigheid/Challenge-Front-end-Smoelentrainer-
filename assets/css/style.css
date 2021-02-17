@@ -5,7 +5,15 @@ body
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+/* Container */
 .container
 {
     margin-top: 12%;
+}
+.float-col
+{
+    width: 30%;
+    float: left;
+    padding: 10px;
 }

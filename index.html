@@ -31,22 +31,22 @@
                 <button class="btn btn-primary" id="btn-start">Start</button>
             </div>
             <div id="subject-page" style="display: none;">
-                <button class="btn btn-prev">Previous</button>
-                <button class="btn btn-next">Next</button>
+                <button class="btn btn-prev">Ga Terug</button>
+                <button class="btn btn-next">Sla deze vraag over</button>
         
 
                 <button type="button" href="#party-collapse" class="btn btn-light img-thumbnail dropdown-toggle" data-toggle="collapse" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-comment-alt"></i> Wat vinden de partijen?
                 </button>
                 <div class="collapse row" id="party-collapse">
-                    <div id="drop-opinion-pro" class="col-2">
+                    <div id="opinions-pro" class="float-col">
                         <b><i class="fas fa-thumbs-up"></i> Eens</b>
                     </div>
-                    <div id="drop-opinion-pro" class="col-2">
-                        <b><i class="fas fa-thumbs-up"></i> Eens</b>
+                    <div id="opinions-none" class="float-col">
+                        <b>~ Geen van beide</b>
                     </div>
-                    <div id="drop-opinion-pro" class="col-2">
-                        <b><i class="fas fa-thumbs-up"></i> Eens</b>
+                    <div id="opinions-contra" class="float-col">
+                        <b><i class="fas fa-thumbs-down"></i> Oneens</b>
                     </div>
                 </div>
 
@@ -64,6 +64,10 @@
             <div id="end-page" style="display: none;">
                 <button class="btn btn-prev">Previous</button>
                 <button id="btn-result" class="btn">Show Result</button>
+
+                <div id="important-subjects" class="form-check">
+
+                </div>
             </div>
             
             <div id="result-page"  style="display: none;">
@@ -74,8 +78,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="http://stemwijzer.dvc-icta.nl/data.js"></script>
-    <!-- <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script> -->
+    <!-- <script src="http://stemwijzer.dvc-icta.nl/data.js"></script> -->
+    <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script>
 
     <script src="./assets/js/classes.js"></script>
     <script src="./assets/js/app.js"></script>
