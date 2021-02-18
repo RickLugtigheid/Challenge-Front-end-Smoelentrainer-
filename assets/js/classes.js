@@ -4,16 +4,10 @@ if(typeof subjects != "object") throw new Error("No subjects found! \n   Load th
 
 /**
  * A static class that handles the loading of subjects
+ * @static
  */
 class SubjectManager
 {
-    constructor()
-    {
-        // We want to use this a static class
-        // In js we have no static class so we just throw an error when constructing the class
-        throw new SyntaxError("Can't create a instance of a static class!");
-    }
-
     /**
      * Initialize the Subject Manager
      */
@@ -79,8 +73,22 @@ class SubjectManager
         document.getElementById('statement').innerHTML = subject['statement'];
 
         // Load the opinions of the parties
-        subject['parties'].forEach(party => {
-            console.log(party);
+        subject['parties'].forEach(party => 
+        {
+            // Create an text element to put the party opinion in
+            let elementStr =  
+            `<div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="${party['name']}-drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                ${party['name']}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="${party['name']}-drop">
+                    <p>${party['opinion']}</p>
+                </div>
+            </div>`;
+
+            // Append the element to the correct element
+            document.getElementById('opinions-'  + party['position']).appendChild(CreateElementFromString(elementStr));
+            console.warn(elementStr);
         });
 
         // True when the subject was successfully loaded
@@ -113,7 +121,6 @@ class SubjectManager
         }
 
         // For all answes we add to 
-        console.warn(extraPoints);
         answers.inner.forEach(answer => {
             // Check the parties that match with this answer
             answer['matches'].forEach(match => 
@@ -133,9 +140,44 @@ class SubjectManager
 
         // Now we check who got the most matches and we return this result
         let bestMatch = {'party': 'empty', 'matches': -1};
-        partyCount.forEach(party => {
+        partyCount.forEach(party => 
+        {
             if(party['matches'] > bestMatch['matches']) bestMatch = party;
         });
+
+        // Create a pichart for the matches
+        let chartData = {
+            datasets: [{
+                label: '# keer eens',
+                data: [],
+                backgroundColor: [],
+                borderColor: [],
+                borderWidth: 1
+            }],
+        
+            // These labels appear in the legend and in the tooltips when hovering different arcs
+            labels: []
+        };
+
+        partyCount.forEach(party => 
+        {
+            // Generate a color from string
+            let color = StringToColor(party['party']);
+
+            // Add to the data
+            chartData['datasets'][0]['data'].push(party['matches']);
+            chartData['datasets'][0]['backgroundColor'].push(HexAddAlpha(color, .25)); // Add transparency
+            chartData['datasets'][0]['borderColor'].push(color);
+            chartData['labels'].push(party['party']);
+        });
+
+        var ctx = document.getElementById('matchChart').getContext('2d');
+        var matchesChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {}
+        });
+        
         return bestMatch;
     }
     /**
@@ -158,6 +200,11 @@ class SubjectManager
      */
     static UpdateButtons()
     {
+        // Empty the party opinions
+        document.getElementById('opinions-pro').innerHTML = '';
+        document.getElementById('opinions-none').innerHTML = '';
+        document.getElementById('opinions-contra').innerHTML = '';
+
         // Get the buttons
         let btnsNext = document.querySelectorAll('.btn-next');
         let btnsPrev = document.querySelectorAll('.btn-prev');
@@ -217,6 +264,9 @@ class AnswerArray
     Export()
     {
         //location.replace(window.URL.createObjectURL(new Blob([this.inner], {type: 'application/json'})));
-        document.getElementById('export').href = window.URL.createObjectURL(new Blob([JSON.stringify(this.inner)], {type: 'text/plain'}));
+        // Get the source of the page
+        
+        let source = document.documentElement;
+        document.getElementById('export').href = window.URL.createObjectURL(new Blob([source.innerHTML], {type: 'text/html'})); //'application/pdf'
     }
 }

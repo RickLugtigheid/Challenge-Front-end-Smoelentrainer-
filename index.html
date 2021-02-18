@@ -25,6 +25,8 @@
 
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
     <div class="container text-center panel panel-default">
         <div class="panel-body row">
             <div id="start-page" style="visibility: visible;">
@@ -71,15 +73,19 @@
             </div>
             
             <div id="result-page"  style="display: none;">
-                <a id="export" href="" download="export.json">Export</a>
+                <!-- <a id="export" href="" download="export.pdf">Export</a> -->
+                <a id="export" href="" download="export.html">Export</a>
                 <h1 id="result">Result not found</h1>
+
+                <!-- Chart Js -->
+                <canvas id="matchChart" width="400" height="250"></canvas>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <!-- <script src="http://stemwijzer.dvc-icta.nl/data.js"></script> -->
-    <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script>
+    <script src="http://stemwijzer.dvc-icta.nl/data.js"></script>
+    <!-- <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script> -->
 
     <script src="./assets/js/classes.js"></script>
     <script src="./assets/js/app.js"></script>
