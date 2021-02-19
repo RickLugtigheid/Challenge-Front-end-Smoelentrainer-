@@ -4,16 +4,10 @@ if(typeof subjects != "object") throw new Error("No subjects found! \n   Load th
 
 /**
  * A static class that handles the loading of subjects
+ * @static
  */
 class SubjectManager
 {
-    constructor()
-    {
-        // We want to use this a static class
-        // In js we have no static class so we just throw an error when constructing the class
-        throw new SyntaxError("Can't create a instance of a static class!");
-    }
-
     /**
      * Initialize the Subject Manager
      */
@@ -79,8 +73,21 @@ class SubjectManager
         document.getElementById('statement').innerHTML = subject['statement'];
 
         // Load the opinions of the parties
-        subject['parties'].forEach(party => {
-            console.log(party);
+        subject['parties'].forEach(party => 
+        {
+            // Create an text element to put the party opinion in
+            let elementStr =  
+            `<div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="${party['name']}-drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                ${party['name']}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="${party['name']}-drop">
+                    <p>${party['opinion']}</p>
+                </div>
+            </div>`;
+
+            // Append the element to the correct element
+            document.getElementById('opinions-'  + party['position']).appendChild(CreateElementFromString(elementStr));
         });
 
         // True when the subject was successfully loaded
@@ -113,12 +120,10 @@ class SubjectManager
         }
 
         // For all answes we add to 
-        console.warn(extraPoints);
         answers.inner.forEach(answer => {
             // Check the parties that match with this answer
             answer['matches'].forEach(match => 
             {
-                console.log(match);
                 // Check in all parties if there is a match
                 partyCount.forEach(party => {
                     if(party['party'] == match['name'])
@@ -131,11 +136,44 @@ class SubjectManager
             });
         });
 
+
+        // Create a pichart for the matches
+        let chartData = {
+            datasets: [{
+                label: '% eens',
+                data: [],
+                backgroundColor: [],
+                borderColor: [],
+                borderWidth: 1
+            }],
+        
+            // These labels appear in the legend and in the tooltips when hovering different arcs
+            labels: []
+        };
         // Now we check who got the most matches and we return this result
+        // And we add the parties to the ChartJs barChart
         let bestMatch = {'party': 'empty', 'matches': -1};
-        partyCount.forEach(party => {
+        partyCount.forEach(party => 
+        {
             if(party['matches'] > bestMatch['matches']) bestMatch = party;
+            // Generate a color from string
+            let color = StringToColor(party['party']);
+
+            // Add to the data
+            let matchPercentage = Math.floor((party['matches'] / subjects.length) * 100);
+            chartData['datasets'][0]['data'].push(matchPercentage);
+            chartData['datasets'][0]['backgroundColor'].push(HexAddAlpha(color, .25)); // Add transparency
+            chartData['datasets'][0]['borderColor'].push(color);
+            chartData['labels'].push(party['party']);
         });
+
+        var ctx = document.getElementById('matchChart').getContext('2d');
+        var matchesChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {}
+        });
+        
         return bestMatch;
     }
     /**
@@ -158,6 +196,11 @@ class SubjectManager
      */
     static UpdateButtons()
     {
+        // Empty the party opinions
+        document.getElementById('opinions-pro').innerHTML = '';
+        document.getElementById('opinions-none').innerHTML = '';
+        document.getElementById('opinions-contra').innerHTML = '';
+
         // Get the buttons
         let btnsNext = document.querySelectorAll('.btn-next');
         let btnsPrev = document.querySelectorAll('.btn-prev');
@@ -170,13 +213,8 @@ class SubjectManager
 
             // Load the end page
             if(this.page == "subject") 
-            {
                 // Show the end page
                 this.ShowPage('end');
-
-                // Export the data
-                answers.Export();
-            }
         }
         else btnsNext.forEach(btnNext => { btnNext.style ="visibility: visible;"; });
 
@@ -212,11 +250,5 @@ class AnswerArray
 
         // Set the answer with the curent subject id
         this.inner[curentPointer] = { subjectID: SubjectManager.subjectPointer, 'answer': answer, 'matches': partiesFound };
-    }
-    
-    Export()
-    {
-        //location.replace(window.URL.createObjectURL(new Blob([this.inner], {type: 'application/json'})));
-        document.getElementById('export').href = window.URL.createObjectURL(new Blob([JSON.stringify(this.inner)], {type: 'text/plain'}));
     }
 }
