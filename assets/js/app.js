@@ -2,7 +2,11 @@ var answers = new AnswerArray();
 
 // Initialize button events
 document.getElementById('btn-start').onclick = function() { SubjectManager.ShowPage('subject'); }
-document.querySelectorAll('.btn-prev').forEach(btnPrev => { btnPrev.onclick = function(){SubjectManager.PrevSubject()}; });
+document.querySelectorAll('.btn-prev').forEach(btnPrev => { btnPrev.onclick = function()
+{
+    if(SubjectManager.page == 'end') SubjectManager.ShowPage('subject');
+    SubjectManager.PrevSubject()
+}; });
 document.querySelectorAll('.btn-next').forEach(btnNext => 
 { 
     // Add the correct event listners to the buttons

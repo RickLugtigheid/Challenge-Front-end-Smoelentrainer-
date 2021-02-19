@@ -88,7 +88,6 @@ class SubjectManager
 
             // Append the element to the correct element
             document.getElementById('opinions-'  + party['position']).appendChild(CreateElementFromString(elementStr));
-            console.warn(elementStr);
         });
 
         // True when the subject was successfully loaded
@@ -125,7 +124,6 @@ class SubjectManager
             // Check the parties that match with this answer
             answer['matches'].forEach(match => 
             {
-                console.log(match);
                 // Check in all parties if there is a match
                 partyCount.forEach(party => {
                     if(party['party'] == match['name'])
@@ -138,17 +136,11 @@ class SubjectManager
             });
         });
 
-        // Now we check who got the most matches and we return this result
-        let bestMatch = {'party': 'empty', 'matches': -1};
-        partyCount.forEach(party => 
-        {
-            if(party['matches'] > bestMatch['matches']) bestMatch = party;
-        });
 
         // Create a pichart for the matches
         let chartData = {
             datasets: [{
-                label: '# keer eens',
+                label: '% eens',
                 data: [],
                 backgroundColor: [],
                 borderColor: [],
@@ -158,14 +150,18 @@ class SubjectManager
             // These labels appear in the legend and in the tooltips when hovering different arcs
             labels: []
         };
-
+        // Now we check who got the most matches and we return this result
+        // And we add the parties to the ChartJs barChart
+        let bestMatch = {'party': 'empty', 'matches': -1};
         partyCount.forEach(party => 
         {
+            if(party['matches'] > bestMatch['matches']) bestMatch = party;
             // Generate a color from string
             let color = StringToColor(party['party']);
 
             // Add to the data
-            chartData['datasets'][0]['data'].push(party['matches']);
+            let matchPercentage = Math.floor((party['matches'] / subjects.length) * 100);
+            chartData['datasets'][0]['data'].push(matchPercentage);
             chartData['datasets'][0]['backgroundColor'].push(HexAddAlpha(color, .25)); // Add transparency
             chartData['datasets'][0]['borderColor'].push(color);
             chartData['labels'].push(party['party']);
@@ -217,13 +213,8 @@ class SubjectManager
 
             // Load the end page
             if(this.page == "subject") 
-            {
                 // Show the end page
                 this.ShowPage('end');
-
-                // Export the data
-                answers.Export();
-            }
         }
         else btnsNext.forEach(btnNext => { btnNext.style ="visibility: visible;"; });
 
@@ -259,14 +250,5 @@ class AnswerArray
 
         // Set the answer with the curent subject id
         this.inner[curentPointer] = { subjectID: SubjectManager.subjectPointer, 'answer': answer, 'matches': partiesFound };
-    }
-    
-    Export()
-    {
-        //location.replace(window.URL.createObjectURL(new Blob([this.inner], {type: 'application/json'})));
-        // Get the source of the page
-        
-        let source = document.documentElement;
-        document.getElementById('export').href = window.URL.createObjectURL(new Blob([source.innerHTML], {type: 'text/html'})); //'application/pdf'
     }
 }

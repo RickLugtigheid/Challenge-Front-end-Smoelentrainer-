@@ -59,23 +59,26 @@
                 <div>
                     <button id="btn-pro" class="btn btn-success btn-next"><i class="fas fa-thumbs-up"></i> Eens</button>
                     <button id="btn-none" class="btn btn-next">~ Geen van beide</button>
-                    <button id="btn-contra" class="btn btn-danger btn-next"><i class="fas fa-thumbs-down"></i> oneens</button>
+                    <button id="btn-contra" class="btn btn-danger btn-next"><i class="fas fa-thumbs-down"></i> Oneens</button>
                 </div>
             </div>
         
             <div id="end-page" style="display: none;">
-                <button class="btn btn-prev">Previous</button>
-                <button id="btn-result" class="btn">Show Result</button>
-
-                <div id="important-subjects" class="form-check">
-
+                <div>
+                    <button class="btn btn-prev">Ga Terug</button>
+                    <button id="btn-result" class="btn">Naar resultaat</button>    
+                </div>
+                
+                <div class="img-thumbnail">
+                    <h4>Welke onderwerpen vind u extra belangrijk?</h4>
+                    <div id="important-subjects" class="form-check">
+    
+                    </div>
                 </div>
             </div>
             
             <div id="result-page"  style="display: none;">
-                <!-- <a id="export" href="" download="export.pdf">Export</a> -->
-                <a id="export" href="" download="export.html">Export</a>
-                <h1 id="result">Result not found</h1>
+                <h1 id="result">Geen resultaat gevonden!</h1>
 
                 <!-- Chart Js -->
                 <canvas id="matchChart" width="400" height="250"></canvas>
