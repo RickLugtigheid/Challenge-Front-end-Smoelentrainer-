@@ -25,7 +25,7 @@ class SubjectManager
     
     /**
      * The curent local Page
-     * @type {"start" | "subject" | "end" | "result"}
+     * @type {"start" | "subject" | "extra" | "party" | "result"}
      */
     static page = "start";
 
@@ -76,8 +76,7 @@ class SubjectManager
         subject['parties'].forEach(party => 
         {
             // Create an text element to put the party opinion in
-            let elementStr =  
-            `<div class="dropdown">
+            let elementStr = `<div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="${party['name']}-drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 ${party['name']}
                 </button>
@@ -177,7 +176,7 @@ class SubjectManager
         return bestMatch;
     }
     /**
-     * @param {"start" | "subject" | "end" | "result"} page
+     * @type {"start" | "subject" | "extra" | "party" | "result"}
      */
     static ShowPage(page)
     {
@@ -187,7 +186,8 @@ class SubjectManager
         // Show/hide the corect pages
         document.getElementById('start-page').style = this.page == 'start' ? 'display: block;' : 'display: none;';
         document.getElementById('subject-page').style = this.page == 'subject' ? 'display: block;' : 'display: none;';
-        document.getElementById('end-page').style = this.page == 'end' ? 'display: block;' : 'display: none;';
+        document.getElementById('extra-page').style = this.page == 'extra' ? 'display: block;' : 'display: none;';
+        document.getElementById('party-page').style = this.page == 'party' ? 'display: block;' : 'display: none;';
         document.getElementById('result-page').style = this.page == 'result' ? 'display: block;' : 'display: none;';
     }
 
@@ -214,7 +214,7 @@ class SubjectManager
             // Load the end page
             if(this.page == "subject") 
                 // Show the end page
-                this.ShowPage('end');
+                this.ShowPage('extra');
         }
         else btnsNext.forEach(btnNext => { btnNext.style ="visibility: visible;"; });
 

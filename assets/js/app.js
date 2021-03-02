@@ -4,9 +4,31 @@ var answers = new AnswerArray();
 document.getElementById('btn-start').onclick = function() { SubjectManager.ShowPage('subject'); }
 document.querySelectorAll('.btn-prev').forEach(btnPrev => { btnPrev.onclick = function()
 {
-    if(SubjectManager.page == 'end') SubjectManager.ShowPage('subject');
+    if(SubjectManager.page == 'extra' || SubjectManager.page == 'party') SubjectManager.ShowPage('subject');
     SubjectManager.PrevSubject()
 }; });
+document.getElementById('btn-all-parties').onchange = function () 
+{
+    // Check all boxes
+    document.querySelectorAll('.party-checkbox').forEach(party =>
+    {
+        party.checked = true;
+    });
+}
+document.getElementById('btn-secular-parties').onchange = function () 
+{
+    // Uncheck all
+    document.querySelectorAll('.party-checkbox').forEach(party =>
+    {
+        party.checked = false;
+    });
+
+    // Check all secular checkboxes
+    document.querySelectorAll('.party-secular').forEach(party =>        
+    {
+        party.checked = true;
+    });
+}
 document.querySelectorAll('.btn-next').forEach(btnNext => 
 { 
     // Add the correct event listners to the buttons
@@ -26,6 +48,10 @@ document.querySelectorAll('.btn-next').forEach(btnNext =>
         break;
     }
 });
+document.getElementById('btn-partyselection').onclick = function() 
+{
+    SubjectManager.ShowPage('party');
+};
 document.getElementById('btn-result').onclick = function() 
 {
     // Show the result page
@@ -63,6 +89,20 @@ for(let i = 0; i < subjects.length; i++)
     HEAVY_SUBJECTS.appendChild(container);
 }
 
+// Load all parties in the selection
+const SELECTED_PARTIES = document.getElementById('party-selection-container');
+parties.forEach(party => 
+{
+    let element = 
+    `<div class="col-md-6 col-lg-4 mb-1">
+        <label class="col-12 btn btn-white bg-white border rounded mx-n1">
+            <input type="checkbox" class="form-check-input mx-1${party['secular'] ? ' party-secular' : ''} party-checkbox" id="party-checkbox-${party['name'].replace(' ', '-')}">
+            <p id="party-checkbox-${party['name'].replace(' ', '-')}-label" class="m-0 ml-2 text-left">${party['name']}</p>
+        </label>
+    </div>`;
+    SELECTED_PARTIES.appendChild(CreateElementFromString(element));
+});
+
 // Initalize the subject Manager
 SubjectManager.Initialize();
 
@@ -76,7 +116,7 @@ function CreateElementFromString(string)
     // Create an template element and give it the string as inner html
     let template = document.createElement('template');
     template.innerHTML = string;
-    
+
     // Return the first child (the element)
     return template.content.firstChild;
 }

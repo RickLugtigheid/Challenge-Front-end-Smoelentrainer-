@@ -63,20 +63,44 @@
                 </div>
             </div>
         
-            <div id="end-page" style="display: none;">
+            <div id="extra-page" style="display: none;">
                 <div>
                     <button class="btn btn-prev">Ga Terug</button>
-                    <button id="btn-result" class="btn">Naar resultaat</button>    
+                    <button id="btn-partyselection" class="btn">Volgende stap</button>    
                 </div>
                 
                 <div class="img-thumbnail">
                     <h4>Welke onderwerpen vind u extra belangrijk?</h4>
                     <div id="important-subjects" class="form-check">
-    
                     </div>
                 </div>
             </div>
+
+            <div id="party-page" style="display: none;">
+                <button class="btn btn-prev">Ga Terug</button>
+                <button id="btn-result" class="btn">Naar resultaat</button>
+
+                <div class="row btn-group btn-group-toggle pb-4" data-toggle="buttons">
+
+                    <div class="mb-1 col-12 col-md-4">
+                        <label class="w-100 btn btn-white btn-block bg-light rounded">
+                            <input type="radio" name="partyRadioButton" class="radio form-check-input mx-1" id="btn-all-parties">
+                            <p class="m-0 ml-2 text-left"> Alle partijen</p>
+                        </label>
+                    </div>
             
+                    <div class="mb-1 col-12 col-md-4">
+                        <label class="w-100 btn btn-white btn-block bg-light rounded">
+                            <input type="radio" name="partyRadioButton" class="radio form-check-input mx-1" id="btn-secular-parties">
+                            <p class="m-0 ml-2 text-left"> Seculiere partijen</p>
+                        </label>
+                    </div>                
+                </div>
+
+                <div id="party-selection-container" class="row m-0 bg-light">
+                </div>
+            </div>
+
             <div id="result-page"  style="display: none;">
                 <h1 id="result">Geen resultaat gevonden!</h1>
 
